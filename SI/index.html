@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <title>SI</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: black;
+      color: white;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .container {
+      max-width: 1250px;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2px;
+      position: relative;
+    }
+
+    .container .image {
+      position: relative;
+      height: 650px;
+    }
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .propt {
+      position: fixed;
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+      top: 88vh;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(30px);
+      width: calc(100% - 20px);
+      padding: 10px 20px;
+      border-radius: 30px;
+      gap: 20px;
+      border: 1px solid rgb(40, 39, 39);
+      z-index: 10;
+    }
+    textarea {
+      width: 100%;
+      height: 25px;
+      font-size: 18px;
+      background: none;
+      border: none;
+      outline: none;
+      resize: none;
+      letter-spacing: 1px;
+      font-family: Arial, Helvetica, sans-serif;
+      padding: 1px 8px;
+      scrollbar-width: none;
+      color: rgb(255, 255, 255);
+      max-height: 50px;
+    }
+    textarea::placeholder {
+      color: rgb(193, 193, 193);
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+    .yarauvchi-btn {
+      border: none;
+      background: none;
+      padding: 0;
+      cursor: pointer;
+      color: white;
+      border-radius: 50%;
+      border: 1px solid rgb(86, 85, 85);
+      width: 40px;
+      height: 35px;
+    }
+    .spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 5px solid rgba(255, 255, 255, 0.2);
+      border-top: 5px solid #fff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      z-index: 10;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+    .controls {
+      position: absolute; /* absolute o‘rniga fixed */
+      background-color: rgba(0, 0, 0, 0.167);
+      backdrop-filter: blur(30px);
+      right: 100px;
+      top: 20px;
+      width: 250px;
+      height: 150px;
+      border-radius: 23px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      display: none;
+      transition: all 2s ease;
+    }
+
+    .controls button {
+      width: 90%;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: white;
+      border: 1px solid rgb(211, 210, 210);
+      cursor: pointer;
+    }
+    .dowlond {
+      background-color: #4caf50;
+    }
+    .dalete {
+      background-color: rgba(225, 0, 45, 0.9);
+    }
+    .menu-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+      background: rgba(0, 0, 0, 0.4);
+      border: none;
+      padding: 8px;
+      color: white;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 5;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="controls">
+        <button class="dowlond" onclick="dowlond()">
+          Yuklab olish
+          <i class="fas fa-download"></i>
+        </button>
+        <button class="dalete" onclick="dalete()">
+          O'chirish <i class="fas fa-trash"></i>
+        </button>
+      </div>
+      <div class="image">
+        <img src="sveky.png" alt="" />
+      </div>
+      <div class="image">
+        <img src="mesicr7mrbest.png" alt="" />
+      </div>
+      <div class="image">
+        <img src="2women.png" alt="" />
+      </div>
+      <div class="image">
+        <img src="beby.png" alt="" />
+      </div>
+      <div class="image">
+        <img src="cat.png" alt="" />
+      </div>
+      <div class="image">
+        <img src="fox.jpg" alt="" />
+      </div>
+      <div class="image">
+        <img src="doge.jpg" alt="" />
+      </div>
+    </div>
+    <div class="propt">
+      <textarea
+        name="propt"
+        id="prompt"
+        placeholder="Rsam yaratish uchun buruq bering"
+        maxlength="250"
+      ></textarea>
+      <button class="yarauvchi-btn" onclick="yaratish()">
+        <i class="fas fa-rocket"></i>
+      </button>
+    </div>
+    <script>
+      function encodePrompt(text) {
+        return encodeURIComponent(text.trim().replace(/\s+/g, " "));
+      }
+
+      function yaratish() {
+        const promptInput = document.getElementById("prompt");
+        const prompt = promptInput.value.trim();
+
+        if (!prompt) {
+          alert("Prompt yozing!");
+          return;
+        }
+
+        const url =
+          "https://image.pollinations.ai/prompt/" + encodePrompt(prompt);
+
+        const container = document.querySelector(".container");
+        const div = document.createElement("div");
+        div.className = "image";
+        div.style.position = "relative";
+
+        const spinner = document.createElement("div");
+        spinner.className = "spinner";
+        div.appendChild(spinner);
+
+        const img = document.createElement("img");
+        img.src = url;
+        img.alt = prompt;
+        img.onload = () => spinner.remove();
+        div.prepend(img);
+
+        const menuBtn = document.createElement("button");
+        menuBtn.className = "menu-btn";
+        menuBtn.innerHTML = '<i class="fas fa-ellipsis-vertical"></i>';
+        div.appendChild(menuBtn);
+
+        // Yangi menu-btn uchun event listener
+        addMenuListener(menuBtn, div);
+
+        let images = JSON.parse(localStorage.getItem("allImages") || "[]");
+        images.unshift(url);
+        localStorage.setItem("allImages", JSON.stringify(images));
+        container.prepend(div);
+        promptInput.value = "";
+      }
+
+      const controls = document.querySelector(".controls");
+
+      // Funksiya: menu-btn bosilganda controls rasm ustida chiqadi
+      function addMenuListener(btn, imageDiv) {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation(); // document click ishlamasligi uchun
+          const rect = imageDiv.getBoundingClientRect();
+
+          controls.style.top = `${rect.top + window.scrollY}px`;
+          controls.style.left = `${rect.left + window.scrollX}px`;
+          controls.style.display = "flex";
+
+          controls.querySelector(".dowlond").onclick = () => {
+            const img = imageDiv.querySelector("img");
+            const link = document.createElement("a");
+            link.href = img.src;
+            link.download = "image.png";
+            link.click();
+          };
+          controls.querySelector(".dalete").onclick = () => {
+            const img = imageDiv.querySelector("img");
+
+            let images = JSON.parse(localStorage.getItem("allImages") || "[]");
+            images = images.filter((url) => url !== img.src); // rasm URL bo‘yicha filter
+            localStorage.setItem("allImages", JSON.stringify(images));
+
+            imageDiv.remove();
+
+            controls.style.display = "none";
+          };
+        });
+        document.body.addEventListener("click", () => {
+          controls.style.display = "none";
+        });
+      }
+
+      // Bosganda boshqa joyga klik qilinganda controls yopilsin
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".image") && !e.target.closest(".controls")) {
+          controls.style.display = "none";
+        }
+      });
+
+      // DOM load bo‘lganida saqlangan rasmlarga menu qo‘shish
+      window.addEventListener("DOMContentLoaded", () => {
+        const container = document.querySelector(".container");
+        const images = JSON.parse(localStorage.getItem("allImages") || "[]");
+
+        images.forEach((url) => {
+          const div = document.createElement("div");
+          div.className = "image";
+          div.style.position = "relative";
+
+          const img = document.createElement("img");
+          img.src = url;
+          img.alt = "Saved image";
+
+          div.appendChild(img);
+
+          const menuBtn = document.createElement("button");
+          menuBtn.className = "menu-btn";
+          menuBtn.innerHTML = '<i class="fas fa-ellipsis-vertical"></i>';
+          div.appendChild(menuBtn);
+
+          addMenuListener(menuBtn, div);
+
+          container.prepend(div);
+        });
+      });
+    </script>
+  </body>
+</html>
